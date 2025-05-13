@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Define source and destination directories
+SOURCE_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(cd "$SOURCE_DIR/.." && pwd)"
+
+# Copy all contents to project root, including hidden files
+echo "Copying files to $PROJECT_ROOT"
+cp -r "$SOURCE_DIR"/* "$PROJECT_ROOT"/
+
+# Special handling for hidden files and directories
+find "$SOURCE_DIR" -name ".*" -maxdepth 1 -mindepth 1 | while read hidden_item; do
+    cp -r "$hidden_item" "$PROJECT_ROOT"/
+done
+
+# Delete the setup script from project root
+rm -f "$PROJECT_ROOT/setup"
+
+# Create a self-destruct command that runs in background
+(sleep 1 && rm -rf "$SOURCE_DIR") &
+
+echo "Setup complete. Files copied to $PROJECT_ROOT"
+echo "The setup directory will be removed momentarily."
