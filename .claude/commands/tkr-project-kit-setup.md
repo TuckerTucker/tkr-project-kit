@@ -1,0 +1,1 @@
+Run the command `./tkr-project-kit/setup`
