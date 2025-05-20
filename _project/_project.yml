@@ -1,8 +1,22 @@
+# TKR Project Kit
+# Core project configuration for the TKR Project Kit
+
+# Project metadata
+project:
+  name: "TKR Project Kit"
+  version: "0.1.0"
+  description: "A project scaffolding toolkit for creating new projects with standardized structure and configurations"
+  author: "TKR"
+  role: "Development Toolkit"
+  timestamp: "2025-05-20"
+  status: "in-progress"
+
+# Directory structure
 directories:
   - path: "../"
     description: "Root project directory"
     subdirectories:
-      - path: "@project/"
+      - path: "_project/"
         description: "Project context and grounding information"
         subdirectories:
           - path: "_claude/"
@@ -11,5 +25,29 @@ directories:
               - "claude.local.md": "Project specific Claude configuration"
           - path: "_ref/"
             description: "Reference materials for packages and/or libraries used in the project to assist the coding agents."
+            subdirectories:
+              - path: "tkr-project-yaml/"
+                description: "Templates and specifications for project YAML files"
+                files:
+                  - "specification-guide.md": "Detailed guide for completing YAML documentation"
+                subdirectories:
+                  - path: "templates/"
+                    description: "YAML templates for different documentation types"
+                    files:
+                      - "component-template.yaml": "Template for individual UI components"
+                      - "template-core-project.yaml": "Template for core project configuration"
           - path: "_specs/"
             description: "Project planning documents. May include wireframes, architecture docs, planning discussions."
+  - path: "./"
+    description: "Setup script and tools"
+    files:
+      - "setup": "Setup script that copies project files to parent directory and self-deletes"
+
+# Project purpose
+purpose:
+  summary: "To provide a standardized project structure for new projects that includes directory organization and configuration for AI assistants and documentation."
+  goals:
+    - "Standardize project organization across projects"
+    - "Provide ready-to-use AI assistant configuration"
+    - "Include reference materials and templates for project documentation"
+    - "Simplify project initialization with setup scripts"
