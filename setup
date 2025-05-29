@@ -4,12 +4,12 @@
 SOURCE_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(cd "$SOURCE_DIR/.." && pwd)"
 
-# Copy all contents to project root, including hidden files
+# Copy all contents to project root, excluding hidden files initially
 echo "Copying files to $PROJECT_ROOT"
 cp -r "$SOURCE_DIR"/* "$PROJECT_ROOT"/
 
-# Special handling for hidden files and directories
-find "$SOURCE_DIR" -name ".*" -maxdepth 1 -mindepth 1 | while read hidden_item; do
+# Special handling for hidden files and directories, excluding .git
+find "$SOURCE_DIR" -name ".*" -maxdepth 1 -mindepth 1 | grep -v "\.git$" | while read hidden_item; do
     cp -r "$hidden_item" "$PROJECT_ROOT"/
 done
 
