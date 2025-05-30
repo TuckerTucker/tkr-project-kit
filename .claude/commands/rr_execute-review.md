@@ -3,14 +3,15 @@
 Run all analysis agents in parallel on the target repository.
 
 ## Variables
-- TARGET_REPO: Repository path or URL to analyze
+- TARGET_REPO: Repository path or URL to analyze. (default: local repo)
 - MAX_DEPTH: Analysis depth (1-5, default: 3)
 
 ## Parallel Execution
-
 For each worktree, execute the corresponding analysis:
 
 ### Task Template:
+
+
 ```
 cd trees/analysis-{AGENT_NAME}
 cat AGENT_PROMPT.md
