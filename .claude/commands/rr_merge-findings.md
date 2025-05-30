@@ -1,26 +1,20 @@
 # Merge and Aggregate Analysis Findings
+## Execute these tasks
 
-Combine all agent findings into comprehensive reports.
+> Variables: REPO_PATH (default: $(pwd))
+> Consolidate all agent findings into unified reports
 
-## Steps
+COLLECT findings from all agents:
+- RUN `mkdir -p ${REPO_PATH}/_project/repo-review/reports/agents`
+- FOR each agent in [overview security a11y performance quality deps]:
+  - IF exists `${REPO_PATH}/_project/repo-review/trees/analysis-$agent/findings.json`:
+    - COPY to `${REPO_PATH}/_project/repo-review/reports/agents/${agent}-findings.json`
+    - COPY `analysis-report.md` to `${REPO_PATH}/_project/repo-review/reports/agents/${agent}-report.md`
 
-1. Collect all findings:
-```bash
-echo "📊 Collecting analysis results..."
-mkdir -p reports/agents
-
-for agent in overview security a11y performance quality deps; do
-  if [ -f "trees/analysis-$agent/findings.json" ]; then
-    cp "trees/analysis-$agent/findings.json" "reports/agents/${agent}-findings.json"
-    cp "trees/analysis-$agent/analysis-report.md" "reports/agents/${agent}-report.md"
-  fi
-done
-```
-
-2. Aggregate JSON findings:
-```bash
-cd reports
-cat agents/*-findings.json | jq -s '
+AGGREGATE JSON findings:
+- CD `${REPO_PATH}/_project/repo-review/reports`
+- RUN jq aggregation on `agents/*-findings.json`:
+  ```jq
   {
     analysis_date: .[0].analysis_date,
     repository: .[0].repository,
@@ -34,46 +28,22 @@ cat agents/*-findings.json | jq -s '
     findings_by_agent: [.[] | {(.agent_type): .findings}] | add,
     recommendations: [.[] | .recommendations[]] | unique
   }
-' > aggregated-findings.json
-```
+  ```
+- WRITE output to `aggregated-findings.json`
 
-3. Generate executive summary:
-```bash
-cat > executive-summary.md << 'EOF'
-# Repository Analysis Executive Summary
+GENERATE executive summary:
+- CREATE `${REPO_PATH}/_project/repo-review/reports/executive-summary.md`:
+  - ADD header with date and repository
+  - PARSE `aggregated-findings.json` for key metrics
+  - EXTRACT top priority recommendations
+  - LINK to individual agent reports
 
-## Overview
-Generated: $(date)
-Repository: ${TARGET_REPO}
+CREATE visual artifacts (optional):
+- GENERATE charts from aggregated data in `${REPO_PATH}/_project/repo-review/reports/`
+- CREATE HTML dashboard if needed
 
-## Key Findings Summary
-[Parse aggregated-findings.json and summarize]
-
-## Priority Actions
-[Extract top recommendations across all agents]
-
-## Individual Reports
-- [Overview Analysis](agents/overview-report.md)
-- [Security Analysis](agents/security-report.md)
-- [Accessibility Analysis](agents/a11y-report.md)
-- [Performance Analysis](agents/performance-report.md)
-- [Code Quality Analysis](agents/quality-report.md)
-- [Dependencies Analysis](agents/deps-report.md)
-EOF
-```
-
-4. Create visual dashboard:
-```bash
-# Generate HTML dashboard with charts
-# Could be a separate artifact if needed
-```
-
-5. Clean up worktrees (optional):
-```bash
-read -p "Remove analysis worktrees? (y/n) " -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-  for agent in overview security a11y performance quality deps; do
-    git worktree remove "trees/analysis-$agent"
-  done
-fi
-```
+CLEANUP worktrees (interactive):
+- PROMPT "Remove analysis worktrees? (y/n)"
+- IF yes:
+  - FOR each agent:
+    - RUN `git worktree remove ${REPO_PATH}/_project/repo-review/trees/analysis-$agent`

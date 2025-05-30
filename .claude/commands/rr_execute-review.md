@@ -1,52 +1,51 @@
 # Execute Parallel Repository Analysis
+## Execute these tasks in parallel
 
-Run all analysis agents in parallel on the target repository.
+> Variables: REPO_PATH (default: $(pwd)), TARGET_REPO (default: ${REPO_PATH}), MAX_DEPTH (default: 3)
+> Execute all agent tasks concurrently for maximum efficiency
 
-## Variables
-- TARGET_REPO: Repository path or URL to analyze. (default: local repo)
-- MAX_DEPTH: Analysis depth (1-5, default: 3)
+TASK 1 - Overview Analysis:
+- CD `${REPO_PATH}/_project/repo-review/trees/analysis-overview`
+- READ `AGENT_PROMPT.md`
+- ANALYZE repository at `${TARGET_REPO}` with depth `${MAX_DEPTH}`
+- GENERATE `analysis-report.md` and `findings.json`
+- LOG metrics to `metrics.json`
 
-## Parallel Execution
-For each worktree, execute the corresponding analysis:
+TASK 2 - Security Analysis:
+- CD `${REPO_PATH}/_project/repo-review/trees/analysis-security`
+- READ `AGENT_PROMPT.md`
+- ANALYZE repository at `${TARGET_REPO}` with depth `${MAX_DEPTH}`
+- GENERATE `analysis-report.md` and `findings.json`
+- LOG metrics to `metrics.json`
 
-### Task Template:
+TASK 3 - Accessibility Analysis:
+- CD `${REPO_PATH}/_project/repo-review/trees/analysis-a11y`
+- READ `AGENT_PROMPT.md`
+- ANALYZE repository at `${TARGET_REPO}` with depth `${MAX_DEPTH}`
+- GENERATE `analysis-report.md` and `findings.json`
+- LOG metrics to `metrics.json`
 
+TASK 4 - Performance Analysis:
+- CD `${REPO_PATH}/_project/repo-review/trees/analysis-performance`
+- READ `AGENT_PROMPT.md`
+- ANALYZE repository at `${TARGET_REPO}` with depth `${MAX_DEPTH}`
+- GENERATE `analysis-report.md` and `findings.json`
+- LOG metrics to `metrics.json`
 
-```
-cd trees/analysis-{AGENT_NAME}
-cat AGENT_PROMPT.md
+TASK 5 - Code Quality Analysis:
+- CD `${REPO_PATH}/_project/repo-review/trees/analysis-quality`
+- READ `AGENT_PROMPT.md`
+- ANALYZE repository at `${TARGET_REPO}` with depth `${MAX_DEPTH}`
+- GENERATE `analysis-report.md` and `findings.json`
+- LOG metrics to `metrics.json`
 
-Analyze the repository at: ${TARGET_REPO}
-Analysis depth: ${MAX_DEPTH}
+TASK 6 - Dependencies Analysis:
+- CD `${REPO_PATH}/_project/repo-review/trees/analysis-deps`
+- READ `AGENT_PROMPT.md`
+- ANALYZE repository at `${TARGET_REPO}` with depth `${MAX_DEPTH}`
+- GENERATE `analysis-report.md` and `findings.json`
+- LOG metrics to `metrics.json`
 
-1. Clone/copy the target repository if needed
-2. Execute your specialized analysis according to your agent prompt
-3. Generate findings in both:
-   - Human-readable report: analysis-report.md
-   - Structured data: findings.json
-4. Create any supporting artifacts (diagrams, charts, etc.)
-5. Log analysis metrics: metrics.json
-```
-
-## Parallel Tasks:
-
-### Task 1: Overview Analysis
-Execute in trees/analysis-overview
-
-### Task 2: Security Analysis  
-Execute in trees/analysis-security
-
-### Task 3: Accessibility Analysis
-Execute in trees/analysis-a11y
-
-### Task 4: Performance Analysis
-Execute in trees/analysis-performance
-
-### Task 5: Code Quality Analysis
-Execute in trees/analysis-quality
-
-### Task 6: Dependencies Analysis
-Execute in trees/analysis-deps
-
-## Progress Tracking:
-Monitor each agent's progress and log completion times.
+MONITOR progress:
+- TRACK completion of each task
+- LOG timestamps to `${REPO_PATH}/_project/repo-review/reports/execution-metrics.json`
