@@ -1,19 +1,17 @@
-# Merge and Aggregate Analysis Findings
+# Merge and Aggregate Analysis Findings (No Worktrees)
 ## Execute these tasks
 
 > Variables: REPO_PATH (default: $(pwd))
 > Consolidate all agent findings into unified reports
 
-COLLECT findings from all agents:
-- RUN `mkdir -p ${REPO_PATH}/_project/repo-review/reports/agents`
-- FOR each agent in [overview security a11y performance quality deps]:
-  - IF exists `${REPO_PATH}/_project/repo-review/trees/analysis-$agent/findings.json`:
-    - COPY to `${REPO_PATH}/_project/repo-review/reports/agents/${agent}-findings.json`
-    - COPY `analysis-report.md` to `${REPO_PATH}/_project/repo-review/reports/agents/${agent}-report.md`
+VERIFY all agents completed:
+- FOR each agent in [overview security quality deps]:
+  - CHECK exists `${REPO_PATH}/_project/repo-review/reports/$agent/findings.json`
+  - IF missing, LOG warning
 
 AGGREGATE JSON findings:
 - CD `${REPO_PATH}/_project/repo-review/reports`
-- RUN jq aggregation on `agents/*-findings.json`:
+- RUN jq aggregation on `agents/*/findings.json`:
   ```jq
   {
     analysis_date: .[0].analysis_date,
@@ -29,21 +27,28 @@ AGGREGATE JSON findings:
     recommendations: [.[] | .recommendations[]] | unique
   }
   ```
-- WRITE output to `aggregated-findings.json`
+- WRITE output to `consolidated/aggregated-findings.json`
 
 GENERATE executive summary:
-- CREATE `${REPO_PATH}/_project/repo-review/reports/executive-summary.md`:
+- CREATE `${REPO_PATH}/_project/repo-review/reports/consolidated/executive-summary.md`:
   - ADD header with date and repository
   - PARSE `aggregated-findings.json` for key metrics
   - EXTRACT top priority recommendations
-  - LINK to individual agent reports
+  - LINK to individual agent reports in `../agents/*/analysis-report.md`
 
-CREATE visual artifacts (optional):
-- GENERATE charts from aggregated data in `${REPO_PATH}/_project/repo-review/reports/`
-- CREATE HTML dashboard if needed
+CONSOLIDATE reports:
+- CREATE `${REPO_PATH}/_project/repo-review/reports/consolidated/full-report.md`:
+  - INCLUDE executive summary
+  - APPEND all agent reports in order: overview, security, a11y, performance, quality, deps
+  - ADD table of contents with links
 
-CLEANUP worktrees (interactive):
-- PROMPT "Remove analysis worktrees? (y/n)"
-- IF yes:
-  - FOR each agent:
-    - RUN `git worktree remove ${REPO_PATH}/_project/repo-review/trees/analysis-$agent`
+CREATE metrics summary:
+- AGGREGATE all `agents/*/metrics.json` files
+- WRITE combined metrics to `consolidated/analysis-metrics.json`
+- INCLUDE execution times, file counts, and coverage stats
+
+GENERATE artifacts index:
+- CREATE `${REPO_PATH}/_project/repo-review/reports/index.md`:
+  - LIST all generated reports with descriptions
+  - PROVIDE navigation links to all outputs
+  - INCLUDE timestamp and configuration used
