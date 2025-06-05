@@ -22,10 +22,6 @@
       "Bash(make:*)",
       "Bash(cargo:*)",
       "Bash(go:*)",
-      "Bash(mkdir:*)",
-      "Bash(rg:*)",
-      "Bash(grep:*)",
-      "Find",
       "Edit",
       "Create",
       "Read",
@@ -39,7 +35,13 @@
       "GitCommit",
       "GitPush",
       "TaskOutput",
-      "KillTask"
+      "KillTask",
+      "Bash(mkdir:*)",
+      "Bash(rg:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(search:*)",
+      "Search(pattern:*)"
     ],
     "deny": [
       "Bash(rm -rf /)",
